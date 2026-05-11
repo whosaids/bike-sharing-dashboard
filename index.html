@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bike Sharing Admin Dashboard</title>
+  <title>Future Bike Sharing Admin Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     * {
@@ -22,7 +22,7 @@
     }
 
     .page {
-      width: min(94vw, 1040px);
+      width: min(94vw, 1180px);
       margin: clamp(1rem, 3vh, 2rem) auto;
       background: #f7f7f7;
       border-radius: 8px;
@@ -31,40 +31,65 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
     .login-page {
-      width: min(94vw, 440px);
+      min-height: calc(100vh - clamp(1.5rem, 3vw, 3rem));
+      display: grid;
+      place-items: center;
+    }
+
+    .login-card {
+      width: min(92vw, 26rem);
+      background: #f7f7f7;
+      border: 1px solid #d2d7de;
+      border-radius: 8px;
+      padding: clamp(1.25rem, 2.2vw, 2rem);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    }
+
+    .login-title {
+      margin: 0 0 0.35rem 0;
+      color: #003b7a;
+      font-size: 1.75rem;
+      line-height: 1.1;
+    }
+
+    .login-subtitle {
+      margin: 0 0 1.2rem 0;
+      color: #4e5968;
+      line-height: 1.4;
     }
 
     .login-form {
       display: grid;
-      gap: 0.9rem;
-      margin-top: 1.3rem;
+      gap: 0.85rem;
     }
 
     .field-label {
-      display: block;
-      margin-bottom: 0.35rem;
+      display: grid;
+      gap: 0.35rem;
       color: #2f4f6f;
       font-weight: 700;
     }
 
-    .field-input {
+    .login-input {
       width: 100%;
+      min-height: 2.7rem;
       border: 1px solid #c7ced8;
       border-radius: 8px;
-      padding: 0.75rem 0.85rem;
+      padding: 0.65rem 0.75rem;
+      color: #003b7a;
       font-size: 1rem;
-      color: #083d77;
       background: #ffffff;
     }
 
-    .auth-message {
-      min-height: 1.2rem;
+    .login-message {
+      min-height: 1.3rem;
       color: #c62828;
       font-weight: 700;
+      line-height: 1.35;
     }
 
     .topbar {
@@ -77,7 +102,7 @@
 
     h1 {
       margin: 0 0 0.35rem 0;
-      font-size: clamp(1.9rem, 3vw, 2.7rem);
+      font-size: clamp(1.85rem, 3vw, 2.65rem);
       line-height: 1.08;
       font-weight: 700;
       color: #003b7a;
@@ -89,70 +114,115 @@
       color: #4e5968;
     }
 
-    .status-pill {
-      min-width: 10rem;
-      border: 1px solid #d2d7de;
-      border-radius: 8px;
-      padding: 0.7rem 0.9rem;
-      background: #f1f2f4;
-      text-align: right;
-      color: #4e5968;
-    }
-
-    .status-connected {
-      color: #1b8f3a;
-      font-weight: 700;
-    }
-
-    .status-disconnected {
-      color: #c62828;
-      font-weight: 700;
-    }
-
-    .status-error {
-      color: #d97706;
-      font-weight: 700;
-    }
-
-    .time-card {
-      width: 100%;
-      background: #dfe8f4;
+    .preview-pill {
+      min-width: 10.9rem;
       border: 1px solid #bfd0e6;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      background: #f1f2f4;
+      text-align: center;
+      color: #003b7a;
+      font-weight: 700;
+      min-height: 4.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: stretch;
+      justify-content: flex-end;
+    }
+
+    .registered-top-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: max-content 3.8rem;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #bfd0e6;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      background: #f1f2f4;
+      color: #003b7a;
+      min-width: 16rem;
+      min-height: 4.6rem;
+    }
+
+    .registered-top-card .metric-label {
+      height: 2.6rem;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .time-card,
+    .recommendation-card {
+      width: 100%;
       border-radius: 8px;
       padding: clamp(1rem, 1.8vw, 1.4rem);
       margin-bottom: 1.3rem;
     }
 
-    .time-label {
+    .time-card {
+      background: #dfe8f4;
+      border: 1px solid #bfd0e6;
+    }
+
+    .time-label,
+    .panel-label {
       font-size: clamp(1rem, 1.2vw, 1.15rem);
       margin-bottom: 0.35rem;
       color: #2f4f6f;
+      font-weight: 700;
     }
 
     .time-main {
-      font-size: clamp(2.6rem, 4.4vw, 3.8rem);
+      font-size: clamp(1.65rem, 2.8vw, 2.4rem);
       font-weight: 700;
       color: #003b7a;
-      line-height: 1.05;
-      margin-bottom: 0.35rem;
+      line-height: 1.15;
+      overflow-wrap: break-word;
     }
 
-    .time-sub {
+    .time-sub,
+    .panel-sub {
       font-size: clamp(1rem, 1.2vw, 1.15rem);
       color: #003b7a;
     }
 
-    .summary-grid,
-    .stations {
+    .recommendation-card {
+      background: #f4f7ef;
+      border: 1px solid #c9d9b8;
+    }
+
+    .recommendation-main {
+      font-size: clamp(1.35rem, 2vw, 1.85rem);
+      line-height: 1.18;
+      color: #1b5e20;
+      font-weight: 700;
+    }
+
+    .recommendation-note {
+      margin-top: 0.45rem;
+      color: #4e5968;
+      overflow-wrap: break-word;
+    }
+
+    .summary-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: clamp(0.75rem, 1.4vw, 1.1rem);
       margin-bottom: 1.3rem;
     }
 
     .metric,
-    .station-card,
-    .control-card {
+    .station-card {
       background: #f1f2f4;
       border: 1px solid #d2d7de;
       border-radius: 8px;
@@ -160,124 +230,361 @@
       min-width: 0;
     }
 
-    .station-card.alerting {
-      border-color: #c62828;
-      background: #fff4f4;
-    }
-
     .metric-label,
     .station-title,
-    .control-title {
+    .station-meta-label {
       font-size: clamp(0.95rem, 1.1vw, 1.08rem);
       margin-bottom: 0.45rem;
       color: #2f4f6f;
+      font-weight: 700;
     }
 
-    .metric-value,
-    .station-value,
-    .control-value {
+    .metric-value {
       font-size: clamp(1rem, 1.2vw, 1.15rem);
       color: #003b7a;
     }
 
+    .registered-control {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      height: 2.6rem;
+    }
+
+    .registered-input {
+      width: 3.8rem;
+      min-height: 2.6rem;
+      border: 1px solid #c7ced8;
+      border-radius: 8px;
+      color: #003b7a;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-align: center;
+      background: #ffffff;
+    }
+
+    .registered-input::-webkit-inner-spin-button,
+    .registered-input::-webkit-outer-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    .registered-input {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
     .big {
-      font-size: clamp(2.1rem, 3vw, 2.8rem);
+      font-size: clamp(2.05rem, 3vw, 2.75rem);
       font-weight: 700;
       line-height: 1;
       margin-right: 0.35rem;
     }
 
-    .station-line {
-      margin-top: 0.55rem;
-      color: #2f4f6f;
+    .station-list {
+      display: grid;
+      gap: clamp(0.75rem, 1.4vw, 1.1rem);
     }
 
-    .state-value {
+    .station-card.alerting {
+      border-color: #c62828;
+      background: #fff4f4;
+    }
+
+    .station-card.needs-bikes {
+      border-color: #d97706;
+      background: #fff8ed;
+    }
+
+    .station-card.extra-bikes {
+      border-color: #1b8f3a;
+      background: #f1fbf5;
+    }
+
+    .station-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: center;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid #d2d7de;
+    }
+
+    .station-title {
+      margin-bottom: 0.2rem;
+      color: #003b7a;
+    }
+
+    .station-location {
+      color: #4e5968;
+      line-height: 1.35;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 0.35rem 0.55rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .status-normal {
+      color: #1b5e20;
+      background: #e7f4ea;
+      border-color: #b7d7bf;
+    }
+
+    .status-alert {
+      color: #a01515;
+      background: #ffe2e2;
+      border-color: #e5aaaa;
+    }
+
+    .status-warning {
+      color: #9a5800;
+      background: #fff0d7;
+      border-color: #e4c28d;
+    }
+
+    .status-extra {
+      color: #146c43;
+      background: #ddf5e7;
+      border-color: #afdcc1;
+    }
+
+    .station-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .station-stat {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid #d2d7de;
+      border-radius: 8px;
+      padding: 0.65rem;
+    }
+
+    .station-stat-value {
+      font-size: 1.45rem;
+      line-height: 1;
+      color: #003b7a;
       font-weight: 700;
     }
 
-    .occupied,
-    .normal {
+    .station-stat-label {
+      margin-top: 0.25rem;
+      color: #4e5968;
+      font-size: 0.9rem;
+    }
+
+    .station-message {
+      color: #2f4f6f;
+      line-height: 1.4;
+      overflow-wrap: break-word;
+      margin-bottom: 0.9rem;
+    }
+
+    .slot-table {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .slot-table-header {
+      display: grid;
+      grid-template-columns: minmax(5rem, 0.9fr) repeat(2, minmax(7rem, 1fr)) minmax(7rem, auto) 2rem;
+      gap: 0.55rem;
+      align-items: center;
+      padding: 0 0.65rem 0.2rem;
+      color: #2f4f6f;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .slot-details {
+      background: #ffffff;
+      border: 1px solid #d2d7de;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .slot-details[open] {
+      border-color: #bfd0e6;
+    }
+
+    .slot-summary {
+      display: grid;
+      grid-template-columns: minmax(5rem, 0.9fr) repeat(2, minmax(7rem, 1fr)) minmax(7rem, auto) 2rem;
+      gap: 0.55rem;
+      align-items: center;
+      padding: 0.65rem;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .slot-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .slot-name {
+      color: #003b7a;
+      font-weight: 700;
+    }
+
+    .slot-state {
+      color: #2f4f6f;
+      overflow-wrap: break-word;
+    }
+
+    .presence-present {
       color: #1b8f3a;
+      font-weight: 700;
     }
 
-    .empty,
-    .alert-on {
-      color: #c62828;
+    .slot-more {
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid #bfd0e6;
+      border-radius: 8px;
+      background: #f1f6fb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: end;
     }
 
-    .authorized {
-      color: #d97706;
+    .slot-more::before {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-right: 2px solid #003b7a;
+      border-bottom: 2px solid #003b7a;
+      transform: rotate(45deg) translate(-0.1rem, -0.1rem);
     }
 
-    .alert-message {
-      min-height: 1.2rem;
-      margin-top: 0.65rem;
-      color: #c62828;
+    .slot-details[open] .slot-more::before {
+      transform: rotate(225deg) translate(-0.1rem, -0.1rem);
+    }
+
+    .slot-panel {
+      padding: 0.75rem;
+      border-top: 1px solid #d2d7de;
+      background: #fbfcfd;
+    }
+
+    .slot-detail-label {
+      color: #4e5968;
+      font-size: 0.86rem;
+      margin-bottom: 0.22rem;
+    }
+
+    .slot-detail-value {
+      color: #003b7a;
       font-weight: 700;
       overflow-wrap: break-word;
     }
 
+    .slot-success-message {
+      color: #1b8f3a;
+      font-weight: 700;
+      overflow-wrap: break-word;
+    }
+
+    .slot-alert-message {
+      grid-column: 1 / -1;
+      color: #c62828;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
     .btn {
-      width: 100%;
-      margin-top: 0.9rem;
       border: none;
       border-radius: 8px;
-      padding: 0.7rem 0.9rem;
+      padding: 0.62rem 0.75rem;
       background: #003b7a;
-      color: white;
-      font-size: 0.95rem;
+      color: #ffffff;
+      font-size: 0.92rem;
       cursor: pointer;
+      min-height: 2.3rem;
     }
 
     .btn:hover {
       background: #0c4f98;
     }
 
-    .btn-secondary {
-      width: auto;
-      margin-top: 0.7rem;
-      background: #4e5968;
+    .btn-reset-alert {
+      background: #c62828;
     }
 
-    .btn-secondary:hover {
-      background: #647184;
+    .btn-reset-alert:hover {
+      background: #a31515;
     }
 
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(0.75rem, 1.4vw, 1.1rem);
-      margin-bottom: 1.3rem;
+    .btn:disabled {
+      cursor: not-allowed;
+      background: #aeb7c2;
+      color: #ffffff;
     }
 
     .meta {
       font-size: clamp(0.9rem, 1vw, 1rem);
       color: #4e5968;
-      margin-top: 0.7rem;
+      margin-top: 1rem;
       overflow-wrap: break-word;
     }
 
-    .dashboard-footer {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 1.1rem;
-    }
-
-    @media (max-width: 760px) {
-      .topbar,
-      .summary-grid,
-      .stations,
-      .controls {
-        grid-template-columns: 1fr;
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .topbar {
+      .station-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .recommendation-card {
         display: grid;
       }
 
-      .status-pill {
+      .topbar,
+      .topbar-actions {
+        display: grid;
+      }
+
+      .preview-pill {
         text-align: left;
+        min-height: auto;
+        justify-content: flex-start;
+      }
+
+      .registered-top-card {
+        min-height: auto;
+      }
+
+      .summary-grid,
+      .station-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .slot-table-header {
+        display: none;
+      }
+
+      .slot-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .slot-summary .slot-auth,
+      .slot-summary .slot-action {
+        display: block;
       }
 
       .page {
@@ -292,378 +599,681 @@
   </style>
 </head>
 <body>
-  <div class="page login-page" id="login_page">
-    <h1>Admin Login</h1>
-    <p class="subtitle">Sign in to access the bike-sharing admin dashboard.</p>
+  <section class="login-page" id="login_page">
+    <div class="login-card">
+      <h1 class="login-title">Admin Login</h1>
+      <p class="login-subtitle">Sign in to monitor live station data and reset slot alerts.</p>
+      <form class="login-form" id="login_form">
+        <label class="field-label" for="login_email">
+          Email
+          <input class="login-input" id="login_email" type="email" autocomplete="username" required>
+        </label>
+        <label class="field-label" for="login_password">
+          Password
+          <input class="login-input" id="login_password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="btn" id="login_button" type="submit">Sign In</button>
+        <div class="login-message" id="login_message"></div>
+      </form>
+    </div>
+  </section>
 
-    <form class="login-form" id="login_form">
-      <div>
-        <label class="field-label" for="admin_email">Email</label>
-        <input class="field-input" id="admin_email" type="email" autocomplete="username" required>
-      </div>
-
-      <div>
-        <label class="field-label" for="admin_password">Password</label>
-        <input class="field-input" id="admin_password" type="password" autocomplete="current-password" required>
-      </div>
-
-      <button class="btn" type="submit">Log In</button>
-      <div class="auth-message" id="auth_message"></div>
-    </form>
-  </div>
-
-  <div class="page hidden" id="admin_page">
+  <main class="page hidden" id="dashboard_page">
     <div class="topbar">
       <div>
         <h1>Bike Sharing Admin Dashboard</h1>
-        <p class="subtitle">Live Firebase RTDB monitor for slot presence, authorization, and alerts.</p>
+        <p class="subtitle">Live station-based view connected to Firebase Realtime Database and the ESP32 slot controller.</p>
       </div>
-
-      <div class="status-pill">
-        Firebase status:<br>
-        <span id="firebase_status" class="status-disconnected">Connecting</span>
+      <div class="topbar-actions">
+        <div class="registered-top-card">
+          <div class="metric-label">Registered Bikes</div>
+          <div class="registered-control">
+            <input class="registered-input" id="registered_bikes_input" type="number" min="0" max="9" value="9">
+          </div>
+        </div>
+        <div class="preview-pill" id="connection_status">Connecting</div>
+        <button class="btn" id="sign_out_button" type="button">Sign Out</button>
       </div>
     </div>
 
-    <div class="time-card">
+    <section class="time-card">
       <div class="time-label">Philippine Time (UTC+8)</div>
-      <div class="time-main"><span id="ph_time">--:--:--</span></div>
-      <div class="time-sub"><span id="ph_day">----</span>, <span id="ph_date">----</span></div>
-    </div>
+      <div class="time-main" id="ph_datetime">--:--:-- | ----, --, --, ----</div>
+    </section>
 
-    <div class="summary-grid">
-      <div class="metric">
-        <div class="metric-label">Occupied Slots</div>
-        <div class="metric-value"><span class="big" id="occupied_count">0</span>of 3</div>
+    <section class="recommendation-card" aria-label="Redistribution recommendation">
+      <div>
+        <div class="panel-label">Bike Redistribution Recommendation</div>
+        <div class="recommendation-main" id="recommendation_text">Calculating recommendation...</div>
+        <div class="recommendation-note" id="recommendation_note"></div>
       </div>
+    </section>
 
+    <section class="summary-grid" aria-label="Dashboard summary">
+      <div class="metric">
+        <div class="metric-label">On-Rent</div>
+        <div class="metric-value"><span class="big" id="on_rent_count">0</span>bikes</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Total Available Bikes</div>
+        <div class="metric-value"><span class="big" id="bike_count">0</span>available</div>
+      </div>
       <div class="metric">
         <div class="metric-label">Empty Slots</div>
-        <div class="metric-value"><span class="big" id="empty_count">3</span>of 3</div>
+        <div class="metric-value"><span class="big" id="empty_count">0</span>open</div>
       </div>
-
       <div class="metric">
-        <div class="metric-label">Active Alerts</div>
-        <div class="metric-value"><span class="big" id="alert_count">0</span>of 3</div>
+        <div class="metric-label">Station Alerts</div>
+        <div class="metric-value"><span class="big" id="alert_count">0</span>active</div>
       </div>
-    </div>
+    </section>
 
-    <div class="stations">
-      <div class="station-card" id="slot1_card">
-        <div class="station-title">Slot 1</div>
-        <div class="station-value"><span class="big" id="slot1_count">-</span>bike</div>
-        <div class="station-line">Presence: <span class="state-value empty" id="slot1_presence">Waiting</span></div>
-        <div class="station-line">Authorization: <span class="state-value normal" id="slot1_authorized">Not authorized</span></div>
-        <div class="station-line">Alert: <span class="state-value normal" id="slot1_alert">Normal</span></div>
-        <div class="alert-message" id="slot1_message"></div>
-        <button class="btn" type="button" id="slot1_reset">Reset Slot 1 Alert</button>
-      </div>
-
-      <div class="station-card" id="slot2_card">
-        <div class="station-title">Slot 2</div>
-        <div class="station-value"><span class="big" id="slot2_count">-</span>bike</div>
-        <div class="station-line">Presence: <span class="state-value empty" id="slot2_presence">Waiting</span></div>
-        <div class="station-line">Authorization: <span class="state-value normal" id="slot2_authorized">Not authorized</span></div>
-        <div class="station-line">Alert: <span class="state-value normal" id="slot2_alert">Normal</span></div>
-        <div class="alert-message" id="slot2_message"></div>
-        <button class="btn" type="button" id="slot2_reset">Reset Slot 2 Alert</button>
-      </div>
-
-      <div class="station-card" id="slot3_card">
-        <div class="station-title">Slot 3</div>
-        <div class="station-value"><span class="big" id="slot3_count">-</span>bike</div>
-        <div class="station-line">Presence: <span class="state-value empty" id="slot3_presence">Waiting</span></div>
-        <div class="station-line">Authorization: <span class="state-value normal" id="slot3_authorized">Not authorized</span></div>
-        <div class="station-line">Alert: <span class="state-value normal" id="slot3_alert">Normal</span></div>
-        <div class="alert-message" id="slot3_message"></div>
-        <button class="btn" type="button" id="slot3_reset">Reset Slot 3 Alert</button>
-      </div>
-    </div>
-
-    <div class="controls">
-      <div class="control-card">
-        <div class="control-title">LED Analog Command</div>
-        <div class="control-value"><span class="big" id="led_analog">-</span>PWM</div>
-      </div>
-
-      <div class="control-card">
-        <div class="control-title">LED Digital Command</div>
-        <div class="control-value"><span class="big" id="led_digital">-</span></div>
-      </div>
-    </div>
+    <section class="station-list" id="station_list" aria-label="Stations"></section>
 
     <div class="meta">
-      Last dashboard update: <span id="last_update">-</span> PH Time
+      Last Firebase update: <span id="last_update">-</span> PH Time
     </div>
+  </main>
 
-    <div class="dashboard-footer">
-      <button class="btn btn-secondary" type="button" id="logout_button">Log Out</button>
-    </div>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, inMemoryPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDP8Un-9W82nZ0P1wx29o3hc7oKOxh2rb4",
+      authDomain: "coe197-bike-sharing.firebaseapp.com",
+      databaseURL: "https://coe197-bike-sharing-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "coe197-bike-sharing",
+      storageBucket: "coe197-bike-sharing.firebasestorage.app",
+      messagingSenderId: "1055379141105",
+      appId: "1:1055379141105:web:1b9bcf1f30a17522cb5450"
+    };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDP8Un-9W82nZ0P1wx29o3hc7oKOxh2rb4",
-    authDomain: "coe197-bike-sharing.firebaseapp.com",
-    databaseURL: "https://coe197-bike-sharing-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "coe197-bike-sharing",
-    storageBucket: "coe197-bike-sharing.firebasestorage.app",
-    messagingSenderId: "1055379141105",
-    appId: "1:1055379141105:web:1b9bcf1f30a17522cb5450"
-  };
+    const TARGET_BIKES_PER_STATION = 2;
+    const MAX_REGISTERED_BIKES = 9;
+    const IDLE_TIMEOUT_MILLIS = 10 * 60 * 1000;
+    let totalRegisteredBikes = MAX_REGISTERED_BIKES;
+    let db;
+    let auth;
+    let stationsUnsubscribe = null;
+    let idleTimerId = null;
+    let loginSubmitted = false;
 
-  const slotState = {
-    slot1: { bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
-    slot2: { bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
-    slot3: { bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" }
-  };
-
-  let listenerUnsubscribes = [];
-  let pendingLoginMessage = "";
-  let loginSubmitted = false;
-
-  function setFirebaseStatus(text, className) {
-    const el = document.getElementById("firebase_status");
-    el.textContent = text;
-    el.className = className;
-  }
-
-  function formatBoolean(value) {
-    return value ? "ON" : "OFF";
-  }
-
-  function updateClock() {
-    const now = new Date();
-    const timeFormatter = new Intl.DateTimeFormat("en-PH", {
-      timeZone: "Asia/Manila",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    });
-    const dayFormatter = new Intl.DateTimeFormat("en-PH", {
-      timeZone: "Asia/Manila",
-      weekday: "long"
-    });
-    const dateFormatter = new Intl.DateTimeFormat("en-PH", {
-      timeZone: "Asia/Manila",
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
-
-    document.getElementById("ph_time").textContent = timeFormatter.format(now);
-    document.getElementById("ph_day").textContent = dayFormatter.format(now);
-    document.getElementById("ph_date").textContent = dateFormatter.format(now);
-  }
-
-  function setLastUpdate() {
-    const now = new Date();
-    document.getElementById("last_update").textContent = new Intl.DateTimeFormat("en-PH", {
-      timeZone: "Asia/Manila",
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    }).format(now);
-  }
-
-  function renderSlot(slotKey, slotNumber) {
-    const state = slotState[slotKey];
-    const countEl = document.getElementById(`${slotKey}_count`);
-    const presenceEl = document.getElementById(`${slotKey}_presence`);
-    const authorizedEl = document.getElementById(`${slotKey}_authorized`);
-    const alertEl = document.getElementById(`${slotKey}_alert`);
-    const messageEl = document.getElementById(`${slotKey}_message`);
-    const cardEl = document.getElementById(`${slotKey}_card`);
-
-    countEl.textContent = state.bikePresent ? "1" : "0";
-    presenceEl.textContent = state.bikePresent ? "Bike present" : "Empty";
-    presenceEl.className = state.bikePresent ? "state-value occupied" : "state-value empty";
-
-    authorizedEl.textContent = state.buttonAuthorized ? "Authorized" : "Not authorized";
-    authorizedEl.className = state.buttonAuthorized ? "state-value authorized" : "state-value normal";
-
-    alertEl.textContent = state.alertActive ? "ALERT" : "Normal";
-    alertEl.className = state.alertActive ? "state-value alert-on" : "state-value normal";
-
-    messageEl.textContent = state.alertActive ? (state.alertMessage || `Unauthorized removal detected at Slot ${slotNumber}`) : "";
-    cardEl.className = state.alertActive ? "station-card alerting" : "station-card";
-  }
-
-  function renderSummary() {
-    const slots = Object.values(slotState);
-    const occupiedCount = slots.filter((slot) => slot.bikePresent).length;
-    const alertCount = slots.filter((slot) => slot.alertActive).length;
-    document.getElementById("occupied_count").textContent = occupiedCount;
-    document.getElementById("empty_count").textContent = 3 - occupiedCount;
-    document.getElementById("alert_count").textContent = alertCount;
-  }
-
-  function listenToSlot(db, slotKey, slotNumber) {
-    const unsubscribe = onValue(ref(db, `/slots/${slotKey}`), (snapshot) => {
-      const value = snapshot.val() || {};
-      slotState[slotKey] = {
-        bikePresent: value.bikePresent === true,
-        buttonAuthorized: value.buttonAuthorized === true,
-        alertActive: value.alertActive === true,
-        alertMessage: typeof value.alertMessage === "string" ? value.alertMessage : "No alert"
-      };
-      renderSlot(slotKey, slotNumber);
-      renderSummary();
-      setFirebaseStatus("Connected", "status-connected");
-      setLastUpdate();
-    }, (error) => {
-      console.error(error);
-      setFirebaseStatus("Read error", "status-error");
-    });
-    listenerUnsubscribes.push(unsubscribe);
-  }
-
-  function listenToLed(db) {
-    const unsubscribeAnalog = onValue(ref(db, "/LED/analog"), (snapshot) => {
-      const value = snapshot.val();
-      document.getElementById("led_analog").textContent = Number.isFinite(value) ? value : "-";
-      setLastUpdate();
-    }, (error) => {
-      console.error(error);
-      setFirebaseStatus("Read error", "status-error");
-    });
-    listenerUnsubscribes.push(unsubscribeAnalog);
-
-    const unsubscribeDigital = onValue(ref(db, "/LED/digital"), (snapshot) => {
-      document.getElementById("led_digital").textContent = formatBoolean(snapshot.val() === true);
-      setLastUpdate();
-    }, (error) => {
-      console.error(error);
-      setFirebaseStatus("Read error", "status-error");
-    });
-    listenerUnsubscribes.push(unsubscribeDigital);
-  }
-
-  async function resetSlotAlert(db, slotKey) {
-    try {
-      await set(ref(db, `/slots/${slotKey}/alertActive`), false);
-      await set(ref(db, `/slots/${slotKey}/alertMessage`), "No alert");
-      await set(ref(db, `/alerts/${slotKey}`), false);
-      setFirebaseStatus("Connected", "status-connected");
-      setLastUpdate();
-    } catch (error) {
-      console.error(error);
-      setFirebaseStatus("Reset error", "status-error");
-    }
-  }
-
-  function clearDashboardListeners() {
-    listenerUnsubscribes.forEach((unsubscribe) => unsubscribe());
-    listenerUnsubscribes = [];
-  }
-
-  function showLogin(message = "") {
-    const messageToShow = message || pendingLoginMessage;
-    pendingLoginMessage = "";
-
-    clearDashboardListeners();
-    document.getElementById("admin_page").classList.add("hidden");
-    document.getElementById("login_page").classList.remove("hidden");
-    document.getElementById("auth_message").textContent = messageToShow;
-  }
-
-  function showDashboard() {
-    document.getElementById("login_page").classList.add("hidden");
-    document.getElementById("admin_page").classList.remove("hidden");
-    setFirebaseStatus("Connected", "status-connected");
-  }
-
-  async function userIsAdmin(db, user) {
-    const snapshot = await get(ref(db, `/roles/${user.uid}/admin`));
-    return snapshot.val() === true;
-  }
-
-  function startDashboard(db) {
-    if (listenerUnsubscribes.length > 0) {
-      return;
-    }
-
-    listenToSlot(db, "slot1", 1);
-    listenToSlot(db, "slot2", 2);
-    listenToSlot(db, "slot3", 3);
-    listenToLed(db);
-  }
-
-  try {
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-
-    document.getElementById("login_form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const email = document.getElementById("admin_email").value.trim();
-      const password = document.getElementById("admin_password").value;
-      document.getElementById("auth_message").textContent = "";
-      loginSubmitted = true;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        console.error(error);
-        loginSubmitted = false;
-        showLogin("Login failed. Check the admin email and password.");
+    const stations = [
+      {
+        id: "station1",
+        name: "Station 1",
+        location: "Main gate area",
+        slots: [
+          { id: "slot1", name: "Slot 1", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot2", name: "Slot 2", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot3", name: "Slot 3", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" }
+        ]
+      },
+      {
+        id: "station2",
+        name: "Station 2",
+        location: "Library entrance",
+        slots: [
+          { id: "slot1", name: "Slot 1", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot2", name: "Slot 2", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot3", name: "Slot 3", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" }
+        ]
+      },
+      {
+        id: "station3",
+        name: "Station 3",
+        location: "Engineering building",
+        slots: [
+          { id: "slot1", name: "Slot 1", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot2", name: "Slot 2", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" },
+          { id: "slot3", name: "Slot 3", bikePresent: false, buttonAuthorized: false, alertActive: false, alertMessage: "No alert" }
+        ]
       }
-    });
+    ];
 
-    document.getElementById("logout_button").addEventListener("click", async () => {
+    function setConnectionStatus(text) {
+      document.getElementById("connection_status").textContent = text;
+    }
+
+    function setLoginMessage(message) {
+      document.getElementById("login_message").textContent = message;
+    }
+
+    function showLogin() {
+      document.getElementById("login_page").classList.remove("hidden");
+      document.getElementById("dashboard_page").classList.add("hidden");
+      setConnectionStatus("Signed Out");
+    }
+
+    function showDashboard() {
+      document.getElementById("login_page").classList.add("hidden");
+      document.getElementById("dashboard_page").classList.remove("hidden");
+      setConnectionStatus("Connecting");
+    }
+
+    function clearIdleTimer() {
+      if (idleTimerId) {
+        clearTimeout(idleTimerId);
+        idleTimerId = null;
+      }
+    }
+
+    function resetIdleTimer() {
+      if (!auth?.currentUser) {
+        return;
+      }
+
+      clearIdleTimer();
+      idleTimerId = setTimeout(handleIdleTimeout, IDLE_TIMEOUT_MILLIS);
+    }
+
+    async function handleIdleTimeout() {
+      clearIdleTimer();
       loginSubmitted = false;
-      await signOut(auth);
-    });
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        showLogin();
-        return;
-      }
-
-      if (!loginSubmitted) {
-        await signOut(auth);
-        showLogin();
-        return;
-      }
+      setLoginMessage("Session timed out. Sign in again.");
+      setConnectionStatus("Session Timed Out");
 
       try {
-        if (await userIsAdmin(db, user)) {
-          showDashboard();
-          startDashboard(db);
-        } else {
-          pendingLoginMessage = "This account is not assigned as an admin.";
-          loginSubmitted = false;
-          await signOut(auth);
-        }
+        await signOut(auth);
       } catch (error) {
         console.error(error);
-        pendingLoginMessage = "Unable to verify admin role.";
-        loginSubmitted = false;
-        await signOut(auth);
       }
-    });
+    }
 
-    document.getElementById("slot1_reset").addEventListener("click", () => resetSlotAlert(db, "slot1"));
-    document.getElementById("slot2_reset").addEventListener("click", () => resetSlotAlert(db, "slot2"));
-    document.getElementById("slot3_reset").addEventListener("click", () => resetSlotAlert(db, "slot3"));
+    function bindIdleTracking() {
+      ["click", "keydown", "pointerdown", "touchstart"].forEach((eventName) => {
+        window.addEventListener(eventName, resetIdleTimer, { passive: true });
+      });
+    }
+
+    function normalizeSlot(slot, fallbackSlot) {
+      return {
+        ...fallbackSlot,
+        bikePresent: Boolean(slot?.bikePresent),
+        buttonAuthorized: Boolean(slot?.buttonAuthorized),
+        alertActive: Boolean(slot?.alertActive),
+        alertMessage: typeof slot?.alertMessage === "string" ? slot.alertMessage : "No alert"
+      };
+    }
+
+    function applyFirebaseStations(stationData = {}) {
+      stations.forEach((station) => {
+        const liveStation = stationData[station.id] || {};
+
+        station.slots = station.slots.map((slot) => {
+          const liveSlot = liveStation.slots?.[slot.id] || {};
+          return normalizeSlot(liveSlot, slot);
+        });
+      });
+
+      renderDashboard();
+    }
+
+    async function startFirebase() {
+      const app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getDatabase(app);
+
+      try {
+        await setPersistence(auth, inMemoryPersistence);
+      } catch (error) {
+        console.error(error);
+        setLoginMessage("Could not prepare a secure login session.");
+      }
+
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          loginSubmitted = false;
+          clearIdleTimer();
+
+          if (stationsUnsubscribe) {
+            stationsUnsubscribe();
+            stationsUnsubscribe = null;
+          }
+
+          showLogin();
+          return;
+        }
+
+        if (!loginSubmitted) {
+          signOut(auth).catch((error) => console.error(error));
+          return;
+        }
+
+        showDashboard();
+        setLoginMessage("");
+        startStationListener();
+        resetIdleTimer();
+      });
+    }
+
+    function startStationListener() {
+      if (stationsUnsubscribe) {
+        stationsUnsubscribe();
+      }
+
+      stationsUnsubscribe = onValue(ref(db, "/stations"), (snapshot) => {
+          applyFirebaseStations(snapshot.val() || {});
+          setConnectionStatus("Firebase Live");
+        }, (error) => {
+          console.error(error);
+          setConnectionStatus("Firebase Error");
+        });
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const timeFormatter = new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+      const parts = new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+      }).formatToParts(now);
+      const datePart = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+      document.getElementById("ph_datetime").textContent = `${timeFormatter.format(now)} | ${datePart.weekday} | ${datePart.month}, ${datePart.day}, ${datePart.year}`;
+    }
+
+    function setLastUpdate() {
+      const now = new Date();
+      document.getElementById("last_update").textContent = new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(now);
+    }
+
+    function getStationStats(station) {
+      const capacity = station.slots.length;
+      const bikes = station.slots.filter((slot) => slot.bikePresent).length;
+      const alerts = station.slots.filter((slot) => slot.alertActive).length;
+
+      return {
+        capacity,
+        bikes,
+        empty: capacity - bikes,
+        alerts,
+        difference: bikes - TARGET_BIKES_PER_STATION
+      };
+    }
+
+    function getStationStatus(station) {
+      const stats = getStationStats(station);
+
+      if (stats.alerts > 0) {
+        return { text: "ALERT", chipClass: "status-alert", cardClass: "alerting" };
+      }
+
+      if (stats.difference < 0) {
+        return { text: "Needs bikes", chipClass: "status-warning", cardClass: "needs-bikes" };
+      }
+
+      if (stats.difference > 0) {
+        return { text: "Extra bikes", chipClass: "status-extra", cardClass: "extra-bikes" };
+      }
+
+      return { text: "Balanced", chipClass: "status-normal", cardClass: "" };
+    }
+
+    function sortStationsForAdminView(stationList) {
+      const rank = {
+        alerting: 0,
+        "needs-bikes": 1,
+        "extra-bikes": 2,
+        "": 3
+      };
+
+      return [...stationList].sort((a, b) => {
+        const aStatus = getStationStatus(a);
+        const bStatus = getStationStatus(b);
+        return rank[aStatus.cardClass] - rank[bStatus.cardClass] || a.name.localeCompare(b.name);
+      });
+    }
+
+    function getRedistributionRecommendation() {
+      const candidates = stations.map((station) => ({
+        station,
+        stats: getStationStats(station)
+      }));
+
+      const sources = candidates
+        .filter((item) => item.stats.difference > 0)
+        .sort((a, b) => b.stats.difference - a.stats.difference);
+
+      const destinations = candidates
+        .filter((item) => item.stats.difference < 0)
+        .sort((a, b) => a.stats.difference - b.stats.difference);
+
+      if (sources.length === 0 || destinations.length === 0) {
+        return {
+          text: "No redistribution needed",
+          note: "All stations are balanced or no station has extra bikes available.",
+          moveCount: 0
+        };
+      }
+
+      const source = sources[0];
+      const destination = destinations[0];
+      const moveCount = Math.min(source.stats.difference, Math.abs(destination.stats.difference));
+      const sourceHasAlert = source.stats.alerts > 0;
+      const destinationHasAlert = destination.stats.alerts > 0;
+      const warning = sourceHasAlert || destinationHasAlert
+        ? " Warning: one of the recommended stations has an active alert."
+        : "";
+
+      return {
+        text: `Move ${moveCount} bike${moveCount === 1 ? "" : "s"} from ${source.station.name} to ${destination.station.name}`,
+        note: `${destination.station.name} is below the target and ${source.station.name} has extra bikes.${warning}`,
+        moveCount
+      };
+    }
+
+    function renderSummary() {
+      const allSlots = stations.flatMap((station) => station.slots);
+      const dockedBikeCount = allSlots.filter((slot) => slot.bikePresent).length;
+      const onRentCount = Math.max(totalRegisteredBikes - dockedBikeCount, 0);
+      const stationAlertCount = stations.filter((station) => getStationStats(station).alerts > 0).length;
+
+      document.getElementById("on_rent_count").textContent = onRentCount;
+      document.getElementById("bike_count").textContent = dockedBikeCount;
+      document.getElementById("empty_count").textContent = allSlots.filter((slot) => !slot.bikePresent).length;
+      document.getElementById("alert_count").textContent = stationAlertCount;
+      renderRegisteredBikeControl(dockedBikeCount);
+    }
+
+    function renderRegisteredBikeControl(minimumRegisteredBikes) {
+      const input = document.getElementById("registered_bikes_input");
+
+      input.min = minimumRegisteredBikes;
+      input.max = MAX_REGISTERED_BIKES;
+      input.value = totalRegisteredBikes;
+    }
+
+    function getAvailableBikeCount() {
+      return stations
+        .flatMap((station) => station.slots)
+        .filter((slot) => slot.bikePresent).length;
+    }
+
+    function setRegisteredBikeValue(nextValue) {
+      const availableBikeCount = getAvailableBikeCount();
+
+      if (!Number.isInteger(nextValue)) {
+        totalRegisteredBikes = availableBikeCount;
+        renderRegisteredBikeControl(availableBikeCount);
+        renderSummary();
+        return;
+      }
+
+      totalRegisteredBikes = Math.min(Math.max(nextValue, availableBikeCount), MAX_REGISTERED_BIKES);
+      renderSummary();
+    }
+
+    function renderRecommendation() {
+      const recommendation = getRedistributionRecommendation();
+      document.getElementById("recommendation_text").textContent = recommendation.text;
+      document.getElementById("recommendation_note").textContent = recommendation.note;
+    }
+
+    function renderStations() {
+      const stationList = document.getElementById("station_list");
+      stationList.innerHTML = "";
+
+      sortStationsForAdminView(stations).forEach((station) => {
+        const stats = getStationStats(station);
+        const status = getStationStatus(station);
+        const stationCard = document.createElement("article");
+        stationCard.className = `station-card ${status.cardClass}`.trim();
+        stationCard.dataset.stationId = station.id;
+
+        const stationMessage = stats.alerts > 0
+          ? `${stats.alerts} slot alert${stats.alerts === 1 ? "" : "s"} need admin attention.`
+          : stats.difference < 0
+            ? `${station.name} needs ${Math.abs(stats.difference)} bike${Math.abs(stats.difference) === 1 ? "" : "s"} to reach target.`
+            : stats.difference > 0
+              ? `${station.name} has ${stats.difference} bike${stats.difference === 1 ? "" : "s"} above target.`
+              : `${station.name} is at the target bike count.`;
+
+        stationCard.innerHTML = `
+          <div class="station-header">
+            <div>
+              <div class="station-title">${station.name}</div>
+              <div class="station-location">${station.location}</div>
+            </div>
+            <span class="status-chip ${status.chipClass}">${status.text}</span>
+          </div>
+
+          <div class="station-stats">
+            <div class="station-stat">
+              <div class="station-stat-value">${stats.bikes}</div>
+              <div class="station-stat-label">Bikes</div>
+            </div>
+            <div class="station-stat">
+              <div class="station-stat-value">${stats.empty}</div>
+              <div class="station-stat-label">Empty slots</div>
+            </div>
+            <div class="station-stat">
+              <div class="station-stat-value">${stats.alerts}</div>
+              <div class="station-stat-label">Alerts</div>
+            </div>
+            <div class="station-stat">
+              <div class="station-stat-value">${stats.capacity}</div>
+              <div class="station-stat-label">Capacity</div>
+            </div>
+          </div>
+
+          <div class="station-message">${stationMessage}</div>
+
+          <div class="station-meta-label">Slot Details</div>
+          <div class="slot-table">
+            <div class="slot-table-header">
+              <div></div>
+              <div>Bike Presence</div>
+              <div>Authorization</div>
+              <div>Alert Status</div>
+              <div></div>
+            </div>
+            ${station.slots.map((slot) => renderSlotRow(station, slot)).join("")}
+          </div>
+        `;
+
+        stationList.appendChild(stationCard);
+      });
+    }
+
+    function renderSlotRow(station, slot) {
+      const presenceText = slot.bikePresent ? "Bike present" : "Empty";
+      const presenceClass = slot.bikePresent ? "presence-present" : "";
+      const authText = slot.buttonAuthorized ? "Authorized" : "Not authorized";
+      const disabledAttribute = slot.alertActive ? "" : "disabled";
+      const buttonClass = slot.alertActive ? "btn btn-reset-alert" : "btn";
+      const slotStatus = getSlotStatusMessage(slot);
+      const slotStatusClass = getSlotStatusClass(slot);
+
+      return `
+        <details class="slot-details" ${slot.alertActive ? "open" : ""}>
+          <summary class="slot-summary">
+            <div class="slot-name">${slot.name}</div>
+            <div class="slot-state ${presenceClass}">${presenceText}</div>
+            <div class="slot-state slot-auth">${authText}</div>
+            <div class="slot-action">
+              <button class="${buttonClass}" type="button" data-station-id="${station.id}" data-slot-id="${slot.id}" ${disabledAttribute}>
+                ${slot.alertActive ? "Reset Alert" : "No Alert"}
+              </button>
+            </div>
+            <div class="slot-more" aria-hidden="true"></div>
+          </summary>
+
+          <div class="slot-panel">
+            <div>
+              <div class="slot-detail-label">Slot status</div>
+              <div class="${slotStatusClass}">${slotStatus}</div>
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function getSlotStatusMessage(slot) {
+      if (slot.alertActive) {
+        return slot.alertMessage || "Unauthorized removal detected.";
+      }
+
+      if (!slot.bikePresent) {
+        return "Successful rental for the bike.";
+      }
+
+      return "No active alert for this slot.";
+    }
+
+    function getSlotStatusClass(slot) {
+      if (slot.alertActive) {
+        return "slot-alert-message";
+      }
+
+      if (!slot.bikePresent) {
+        return "slot-success-message";
+      }
+
+      return "slot-detail-value";
+    }
+
+    async function resetSlotAlert(stationId, slotId) {
+      const station = stations.find((item) => item.id === stationId);
+      if (!station) {
+        return;
+      }
+
+      const slot = station.slots.find((item) => item.id === slotId);
+      if (!slot) {
+        return;
+      }
+
+      if (!db) {
+        setConnectionStatus("Firebase Offline");
+        return;
+      }
+
+      setConnectionStatus("Resetting Alert");
+
+      try {
+        await Promise.all([
+          set(ref(db, `/stations/${stationId}/slots/${slotId}/alertActive`), false),
+          set(ref(db, `/stations/${stationId}/slots/${slotId}/alertMessage`), "No alert"),
+          set(ref(db, `/alerts/${stationId}/${slotId}`), false)
+        ]);
+
+        slot.alertActive = false;
+        slot.alertMessage = "No alert";
+        renderDashboard();
+        setConnectionStatus("Firebase Live");
+      } catch (error) {
+        console.error(error);
+        setConnectionStatus("Reset Failed");
+      }
+    }
+
+    function bindResetButtons() {
+      document.querySelectorAll("[data-station-id][data-slot-id]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          resetSlotAlert(button.dataset.stationId, button.dataset.slotId);
+        });
+      });
+    }
+
+    function bindRegisteredBikeControl() {
+      document.getElementById("registered_bikes_input").addEventListener("change", (event) => {
+        setRegisteredBikeValue(Number(event.target.value));
+      });
+    }
+
+    function bindLoginForm() {
+      document.getElementById("login_form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById("login_email").value.trim();
+        const password = document.getElementById("login_password").value;
+        const loginButton = document.getElementById("login_button");
+
+        setLoginMessage("");
+        loginButton.disabled = true;
+        loginButton.textContent = "Signing In";
+
+        try {
+          loginSubmitted = true;
+          await signInWithEmailAndPassword(auth, email, password);
+          document.getElementById("login_password").value = "";
+          resetIdleTimer();
+        } catch (error) {
+          loginSubmitted = false;
+          console.error(error);
+          setLoginMessage(getLoginErrorMessage(error.code));
+        } finally {
+          loginButton.disabled = false;
+          loginButton.textContent = "Sign In";
+        }
+      });
+    }
+
+    function bindSignOutButton() {
+      document.getElementById("sign_out_button").addEventListener("click", async () => {
+        setConnectionStatus("Signing Out");
+        loginSubmitted = false;
+        clearIdleTimer();
+
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error(error);
+          setConnectionStatus("Sign Out Failed");
+        }
+      });
+    }
+
+    function getLoginErrorMessage(errorCode) {
+      if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password" || errorCode === "auth/user-not-found") {
+        return "Invalid email or password.";
+      }
+
+      if (errorCode === "auth/too-many-requests") {
+        return "Too many attempts. Try again later.";
+      }
+
+      return "Sign-in failed. Check the account and try again.";
+    }
+
+    function renderDashboard() {
+      renderSummary();
+      renderRecommendation();
+      renderStations();
+      bindResetButtons();
+      setLastUpdate();
+    }
 
     updateClock();
+    bindLoginForm();
+    bindRegisteredBikeControl();
+    bindSignOutButton();
+    bindIdleTracking();
+    startFirebase();
     setInterval(updateClock, 1000);
-  } catch (error) {
-    console.error(error);
-    setFirebaseStatus("Setup error", "status-error");
-  }
-</script>
+  </script>
 </body>
 </html>
